@@ -24,24 +24,19 @@ class InFileRepository implements TaskRepository {
     @Override
     public void remove(String id) {
         for(Task task: this.db){
-            if(task.getId().equals(id)){
-
+            if(task.getId().getId().equals(id)){
+                this.db.remove(task);
+                return;
             }
         }
     }
-
-    @Override
-    public String updateDueDateTask(String id) {
-        return null;
-    }
-
-    @Override
-    public String updateStatusDate(String id) {
-        return null;
-    }
-
     @Override
     public Task getTaskById(String id) {
-        return null;
+        for(Task task: this.db){
+            if(task.getId().getId().equals(id)){
+                return task;
+            }
+        }
+        throw new IllegalArgumentException("the task with " + id + "does not exist");
     }
 }
