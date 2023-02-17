@@ -1,10 +1,15 @@
+import domain.models.CommandInstructions;
 import domain.services.InputParser;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("args.length : " + args.length);
 
-        InputParser inputParser = new InputParser(args);
+        CommandInstructions commandInstructions = CommandInstructions.valueOf("add".toUpperCase());
+        System.out.println(commandInstructions.getInstruction());
 
-        System.out.println("Hello World!");
+        InputParser inputParser = new InputParser(List.of(args));
     }
 }

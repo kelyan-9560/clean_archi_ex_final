@@ -1,7 +1,7 @@
 package domain.models;
 
 public enum CommandInstructions {
-    ADD("add"),
+    ADD("addaze"),
     LIST("list"),
     REMOVE("remove"),
     UPDATE("update");
@@ -16,6 +16,16 @@ public enum CommandInstructions {
 
     public String getInstruction() {
         return instruction;
+    }
+
+
+    public boolean instructionsContains(String input){
+        for(CommandInstructions commandInstructions : CommandInstructions.values()){
+            if(commandInstructions.getInstruction().equals(input)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

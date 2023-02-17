@@ -15,4 +15,8 @@ public class ParserException extends Exception{
         return new ParserException("Instructions is not correct");
     }
 
+    public static ParserException arg(){
+        return new ParserException("Arg is not correct");
+    }
+
 }
