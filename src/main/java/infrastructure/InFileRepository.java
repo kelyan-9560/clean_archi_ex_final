@@ -18,8 +18,9 @@ class InFileRepository implements TaskRepository {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final TypeReference<List<Task>> mapType = new TypeReference<List<Task>>() {};
 
-    InFileRepository(){
+    InFileRepository() throws IOException {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        this.init();
     }
 
     private static final String jsonFilePath = "data.json";
