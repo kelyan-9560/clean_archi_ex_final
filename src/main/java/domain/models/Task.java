@@ -61,4 +61,16 @@ public class Task {
     public List<Task> getSubtasks() {
         return subtasks;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id + "\n"+
+                ", description='" + description + '\'' + "\n"+
+                ", dueDate=" + dueDate + "\n"+
+                ", closeDate=" + closeDate + "\n"+
+                ", state=" + state + "\n"+
+                ", subtasks=" + subtasks + "\n"+
+                '}' + "\n";
+    }
 }

@@ -30,7 +30,6 @@ class InFileRepository implements TaskRepository {
     public void add(Task task) throws IOException {
         this.db.add(task);
         this.save();
-
     }
 
     @Override
@@ -63,7 +62,7 @@ class InFileRepository implements TaskRepository {
         this.saveFile(arrayToJson);
     }
 
-    public void init() throws IOException {
+    private void init() throws IOException {
         String data = String.valueOf(this.readFile());
         this.db = objectMapper.readValue(data, mapType);
     }
