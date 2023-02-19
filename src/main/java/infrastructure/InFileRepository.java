@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class InFileRepository implements TaskRepository {
+public class InFileRepository implements TaskRepository {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final TypeReference<List<Task>> mapType = new TypeReference<List<Task>>() {};
 
-    InFileRepository() throws IOException {
+    public InFileRepository() throws IOException {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         this.init();
     }
