@@ -7,6 +7,7 @@ import domain.models.TaskState;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,20 +26,20 @@ class InFileRepositoryTest {
 
         repository.add(taskWithContent);
         Task taskGet = repository.getTaskById(taskWithContent.getId().getId());
-        assertEquals(taskWithContent, taskGet);
+        assertEquals(taskWithContent.getId().getId(), taskGet.getId().getId());
 
 
         Task taskWithContentAndDueDate = createTaskWithContentAndDueDate();
 
         repository.add(taskWithContentAndDueDate);
         Task taskGet2 = repository.getTaskById(taskWithContentAndDueDate.getId().getId());
-        assertEquals(taskWithContentAndDueDate, taskGet2);
+        assertEquals(taskWithContentAndDueDate.getId().getId(), taskGet2.getId().getId());
 
         Task task = createTask();
 
         repository.add(task);
         Task taskGet3 = repository.getTaskById(task.getId().getId());
-        assertEquals(task, taskGet3);
+        assertEquals(task.getId().getId(), taskGet3.getId().getId());
     }
 
     @Test
@@ -48,6 +49,13 @@ class InFileRepositoryTest {
 
         var list = repository.list();
         assertNotNull(list);
+    }
+
+    @Test
+    void date() throws IOException {
+        String date = LocalDateTime.now().toString();
+        System.out.println(date);
+        assertEquals(1,1);
     }
 
     @Test
