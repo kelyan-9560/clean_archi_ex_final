@@ -22,6 +22,7 @@ public class InFileRepository implements TaskRepository {
 
     public InFileRepository() throws IOException {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        this.resetFile();
         this.init();
     }
 
@@ -92,12 +93,9 @@ public class InFileRepository implements TaskRepository {
     }
 
     private void saveFile(String json){
-        File old_File = new File(jsonFilePath);
-        if (old_File.exists()){
-            old_File.delete();
-        }
+        this.resetFile();
         try {
-            FileWriter myWriter = new FileWriter(jsonFilePath);
+            FileWriter myWriter = new FileWriter(jsonFilePath,false);
             myWriter.write(json);
             myWriter.close();
         } catch (IOException e) {
@@ -105,4 +103,19 @@ public class InFileRepository implements TaskRepository {
             e.printStackTrace();
         }
     }
+
+    private void resetFile(){
+        File old_File=new File(jsonFilePath);
+        old_File.delete();
+        File New_File = new File(jsonFilePath);
+        String Overwritten_Content = "[]";
+        try {
+            FileWriter Overwritten_File = new FileWriter(New_File);
+            Overwritten_File.write(Overwritten_Content);
+            Overwritten_File.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
