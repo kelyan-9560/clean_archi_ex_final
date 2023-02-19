@@ -21,3 +21,8 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.idea/clean_archi_ex_final.iml
+.idea/discord.xml
+.idea/modules.xml
+target/classes/classpath.index
+target/test-classes/classpath.index
