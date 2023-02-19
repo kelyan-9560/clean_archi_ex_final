@@ -39,7 +39,7 @@ public class InFileRepository implements TaskRepository {
                 task.getCloseDate(), task.getState(), task.getSubtasks()
         );
 
-        this.db.add(MappingService.taskToDto(task));
+        this.db.add(MappingService.taskToDto(taskToCreate));
         this.save();
     }
 
