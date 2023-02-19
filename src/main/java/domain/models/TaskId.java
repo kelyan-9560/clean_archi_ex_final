@@ -4,13 +4,13 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class TaskId {
-    private final String id;
-
+    private  String id;
 
     public TaskId(String id) {
         this.id = id;
     }
 
+    public TaskId(){}
     public static TaskId of(String id){
         return new TaskId(id);
     }

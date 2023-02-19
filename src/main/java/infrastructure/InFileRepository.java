@@ -2,10 +2,12 @@ package infrastructure;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import domain.dto.TaskDto;
 import domain.kernel.TaskRepository;
 import domain.models.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.models.TaskId;
+import domain.services.MappingService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,19 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class InFileRepository implements TaskRepository {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final TypeReference<List<Task>> mapType = new TypeReference<List<Task>>() {};
+    private static final TypeReference<List<TaskDto>> mapType = new TypeReference<List<TaskDto>>() {};
 
     public InFileRepository() throws IOException {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        this.resetFile();
         this.init();
     }
 
     private static final String jsonFilePath = "data.json";
-    private List<Task> db = new ArrayList<Task>();
+    private List<TaskDto> db = new ArrayList<TaskDto>();
 
     @Override
     public void add(Task task) throws IOException {
@@ -37,19 +39,19 @@ public class InFileRepository implements TaskRepository {
                 task.getCloseDate(), task.getState(), task.getSubtasks()
         );
 
-        this.db.add(taskToCreate);
+        this.db.add(MappingService.taskToDto(task));
         this.save();
     }
 
     @Override
     public List<Task> list() {
-        return this.db;
+        return this.db.stream().map(MappingService::taskDtoToTask).collect(Collectors.toList());
     }
 
     @Override
     public void remove(String id) throws IOException {
-        for(Task task: this.db){
-            if(task.getId().getId().equals(id)){
+        for(TaskDto task: this.db){
+            if(task.id.equals(id)){
                 this.db.remove(task);
                 return;
             }
@@ -58,9 +60,9 @@ public class InFileRepository implements TaskRepository {
     }
     @Override
     public Task getTaskById(String id) {
-        for(Task task: this.db){
-            if(task.getId().getId().equals(id)){
-                return task;
+        for(TaskDto task: this.db){
+            if(task.id.getId().equals(id)){
+                return MappingService.taskDtoToTask(task);
             }
         }
         throw new IllegalArgumentException("the task with " + id + "does not exist");
@@ -88,7 +90,6 @@ public class InFileRepository implements TaskRepository {
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 data.append(myReader.nextLine());
-                System.out.println(data);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
@@ -111,7 +112,7 @@ public class InFileRepository implements TaskRepository {
     }
 
     private void resetFile(){
-        File old_File=new File(jsonFilePath);
+        File old_File = new File(jsonFilePath);
         old_File.delete();
         File New_File = new File(jsonFilePath);
         String Overwritten_Content = "[]";
