@@ -51,7 +51,7 @@ public class InFileRepository implements TaskRepository {
     @Override
     public void remove(String id) throws IOException {
         for(TaskDto task: this.db){
-            if(task.id.equals(id)){
+            if(task.id.getId().equals(id)){
                 this.db.remove(task);
                 return;
             }
