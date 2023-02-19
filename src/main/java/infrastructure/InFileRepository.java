@@ -31,7 +31,13 @@ public class InFileRepository implements TaskRepository {
 
     @Override
     public void add(Task task) throws IOException {
-        this.db.add(task);
+        TaskId id = nextId();
+        var taskToCreate = Task.of(
+                id, task.getDescription(), task.getCreationDate(), task.getDueDate(),
+                task.getCloseDate(), task.getState(), task.getSubtasks()
+        );
+
+        this.db.add(taskToCreate);
         this.save();
     }
 

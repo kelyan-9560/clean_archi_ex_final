@@ -1,14 +1,16 @@
+import domain.exception.ParserException;
 import domain.kernel.TaskRepository;
 import domain.services.InputParser;
 import domain.services.TaskService;
 import infrastructure.InFileRepository;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        System.out.println("args.length : " + args.length);
+    public static void main(String[] args) throws IOException, ParserException {
+        System.out.println("args : " + Arrays.toString(args));
 
         TaskRepository taskRepository = new InFileRepository();
         TaskService taskService = new TaskService(taskRepository);
@@ -16,18 +18,9 @@ public class Main {
         InputParser inputParser = new InputParser(taskService, List.of(args));
 
         try {
-            /*
-            inputParser.commandIsValid("agenda");
-            inputParser.instructionIsValid("update");
-            inputParser.argsIsValid("c");
-
-             */
-
-            inputParser.instructionValidation("remove");
-
+            inputParser.instructionValidation(args[1]);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 }

@@ -3,6 +3,7 @@ package domain.services;
 import domain.kernel.TaskRepository;
 import domain.models.Task;
 import domain.models.TaskId;
+import domain.models.TaskState;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -36,6 +37,22 @@ public class TaskService {
         return this.repository.getTaskById(id);
     }
 
+    public void update(String id, Task taskToUpdate) throws IOException {
+        Task task = this.repository.getTaskById(id);
+        this.repository.remove(id);
+
+        var taskUpdated = new Task(
+                task.getId(),
+                taskToUpdate.getDescription() == null ? task.getDescription() : taskToUpdate.getDescription(),
+                taskToUpdate.getCreationDate() == null ? task.getCreationDate() : taskToUpdate.getCreationDate(),
+                taskToUpdate.getDueDate() == null ? task.getDueDate() : taskToUpdate.getDueDate(),
+                taskToUpdate.getCloseDate() == null ? task.getCloseDate() : taskToUpdate.getCloseDate(),
+                taskToUpdate.getState()  == null ? task.getState() : taskToUpdate.getState(),
+                taskToUpdate.getSubtasks() == null ? task.getSubtasks() : taskToUpdate.getSubtasks()
+        );
+
+        this.repository.add(taskUpdated);
+    }
     public void updateDueDateTask(String id,LocalDateTime newDueDate) throws IOException {
         Task task = this.repository.getTaskById(id);
         this.repository.remove(id);
