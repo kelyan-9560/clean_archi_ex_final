@@ -6,7 +6,6 @@ import domain.models.TaskId;
 import domain.models.TaskState;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -21,30 +20,32 @@ class InFileRepositoryTest {
 
     @Test
     void add() throws IOException {
-        TaskId id1 = repository.nextId();
-        Task taskWithContent = Task.WithContent(id1, "description1");
+
+        Task taskWithContent = createTaskWithContent();
 
         repository.add(taskWithContent);
-        Task taskGet = repository.getTaskById(id1.getId());
+        Task taskGet = repository.getTaskById(taskWithContent.getId().getId());
         assertEquals(taskWithContent, taskGet);
 
-        TaskId id2 = repository.nextId();
-        Task taskWithContentAndDueDate = Task.WithContentAndDueDate(id2, "description2", null);
+
+        Task taskWithContentAndDueDate = createTaskWithContentAndDueDate();
 
         repository.add(taskWithContentAndDueDate);
-        Task taskGet2 = repository.getTaskById(id2.getId());
+        Task taskGet2 = repository.getTaskById(taskWithContentAndDueDate.getId().getId());
         assertEquals(taskWithContentAndDueDate, taskGet2);
 
-        TaskId id3 = repository.nextId();
-        Task task = Task.of(id3, "description3", LocalDateTime.now(), LocalDateTime.now(), TaskState.TODO, null);
+        Task task = createTask();
 
         repository.add(task);
-        Task taskGet3 = repository.getTaskById(id3.getId());
+        Task taskGet3 = repository.getTaskById(task.getId().getId());
         assertEquals(task, taskGet3);
     }
 
     @Test
-    void list() {
+    void list() throws IOException {
+        Task task1 = createTask();
+        repository.add(task1);
+
         var list = repository.list();
         assertNotNull(list);
     }
@@ -62,18 +63,25 @@ class InFileRepositoryTest {
     }
 
     @Test
-    void getTaskById() {
+    void getTaskById() throws IOException {
+        Task task = createTask();
+        repository.add(task);
+        Task taskGet = repository.getTaskById(task.getId().getId());
+        assertEquals(task, taskGet);
+
+        Task task2 = createTaskWithContent();
+        assertThrows(IllegalArgumentException.class, () -> repository.getTaskById(task2.getId().getId()));
     }
 
-    Task createTask() throws IOException {
+    Task createTask() {
         TaskId id = repository.nextId();
         return Task.of(id, "description", LocalDateTime.now(), LocalDateTime.now(), TaskState.TODO, null);
     }
-    Task createTaskWithContent() throws IOException {
+    Task createTaskWithContent() {
         TaskId id = repository.nextId();
         return Task.WithContent(id, "description");
     }
-    Task createTaskWithContentAndDueDate() throws IOException {
+    Task createTaskWithContentAndDueDate() {
         TaskId id = repository.nextId();
         return Task.WithContentAndDueDate(id, "description", LocalDateTime.now());
     }
