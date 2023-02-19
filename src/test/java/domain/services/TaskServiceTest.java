@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskServiceTest {
 
     TaskRepository repository = new InFileRepository();
-    //TaskRepository repository = new InFileRepository();
     TaskService taskService = new TaskService(repository);
 
     TaskServiceTest() throws IOException {
@@ -120,6 +119,24 @@ class TaskServiceTest {
         var updatedTask = taskService.getTaskById(id.getId());
         assertEquals(updatedTask.getState(), TaskState.DONE);
     }
+
+
+    @Test
+    void makeTaskInProgress() throws IOException {
+        var id = createId();
+        var description = "description";
+        var date = LocalDateTime.now();
+        var task = new Task(id, description,date, date, date, TaskState.TODO, null);
+        taskService.saveTask(task);
+
+
+        var taskInProgress = Task.of(id, description, date, date, date, TaskState.PROGRESS, null);
+        taskService.update(id.getId(), taskInProgress);
+
+        var updatedTask = taskService.getTaskById(id.getId());
+        assertEquals(updatedTask.getState(), TaskState.PROGRESS);
+    }
+
 
     TaskId createId(){
         return repository.nextId();
