@@ -11,5 +11,20 @@ public class Main {
         System.out.println(commandInstructions.getInstruction());
 
         InputParser inputParser = new InputParser(List.of(args));
+
+        try {
+            /*
+            inputParser.commandIsValid("agenda");
+            inputParser.instructionIsValid("update");
+            inputParser.argsIsValid("c");
+
+             */
+
+            inputParser.instructionValidation("add");
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
