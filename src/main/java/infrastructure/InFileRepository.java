@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import domain.kernel.TaskRepository;
 import domain.models.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.models.TaskId;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 class InFileRepository implements TaskRepository {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -55,6 +57,11 @@ class InFileRepository implements TaskRepository {
             }
         }
         throw new IllegalArgumentException("the task with " + id + "does not exist");
+    }
+
+    @Override
+    public TaskId nextId() {
+        return TaskId.fromUUID(UUID.randomUUID());
     }
 
     public void save() throws IOException {
