@@ -100,11 +100,15 @@ public class InputParser {
             }
 
             if(argumentName =='s'){
-                var value = arg.split(":")[1];
-                parserValidator.statusIsValid(value);
-                taskBuilder.setState(TaskState.valueOf(value));
+                taskBuilder.setState(getStateValue(arg));
             }
         }
         return taskBuilder.build();
+    }
+
+    private TaskState getStateValue(String arg) throws ParserException {
+        var value = arg.split(":")[1];
+        parserValidator.statusIsValid(value);
+        return TaskState.valueOf(value);
     }
 }
