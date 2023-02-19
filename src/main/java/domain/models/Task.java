@@ -4,13 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Task {
-    private final TaskId id;
-    private final String description;
-    private final LocalDateTime creationDate;
+    private  TaskId id;
+    private  String description;
+    private  LocalDateTime creationDate;
     private LocalDateTime dueDate;
     private LocalDateTime closeDate;
     private TaskState state;
-    private final List<Task> subtasks;
+    private  List<Task> subtasks;
+
+    public Task(){}
 
 
     public Task(TaskId id, String description, LocalDateTime creationDate, LocalDateTime dueDate, LocalDateTime closeDate, TaskState state, List<Task> subtasks) {
@@ -22,6 +24,7 @@ public class Task {
         this.state = state;
         this.subtasks = subtasks;
     }
+
 
     public static Task of(TaskId id, String description, LocalDateTime creationDate, LocalDateTime dueDate, LocalDateTime closeDate, TaskState state, List<Task> subtasks) {
         return new Task(id, description, creationDate, dueDate, closeDate, state, subtasks);
@@ -77,6 +80,7 @@ public class Task {
         return "Task{" +
                 "id=" + id + "\n"+
                 ", description='" + description + '\'' + "\n"+
+                ", createdDate=" + creationDate + "\n"+
                 ", dueDate=" + dueDate + "\n"+
                 ", closeDate=" + closeDate + "\n"+
                 ", state=" + state + "\n"+
