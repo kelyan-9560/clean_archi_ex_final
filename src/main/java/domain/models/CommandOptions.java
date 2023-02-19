@@ -1,13 +1,13 @@
 package domain.models;
 
-public enum CommandArguments {
+public enum CommandOptions {
     C("c"),
     D("d"),
     S("s");
 
     private String value;
 
-    CommandArguments(String value) {
+    CommandOptions(String value) {
         this.value = value;
     }
 
@@ -17,7 +17,7 @@ public enum CommandArguments {
     }
 
     public Boolean contains(String input){
-        for(CommandArguments commandArguments : CommandArguments.values()){
+        for(CommandOptions commandArguments : CommandOptions.values()){
             if(commandArguments.getValue().equals(input)){
                 return true;
             }

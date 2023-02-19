@@ -7,9 +7,6 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("args.length : " + args.length);
 
-        CommandInstructions commandInstructions = CommandInstructions.valueOf("add".toUpperCase());
-        System.out.println(commandInstructions.getInstruction());
-
         InputParser inputParser = new InputParser(List.of(args));
 
         try {
@@ -20,7 +17,7 @@ public class Main {
 
              */
 
-            inputParser.instructionValidation("add");
+            inputParser.instructionValidation("remove");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

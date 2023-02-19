@@ -11,12 +11,15 @@ public class ParserException extends Exception{
         return new ParserException("Command is not correct");
     }
 
-    public static ParserException instructions() {
-        return new ParserException("Instructions is not correct");
+    public static ParserException instruction(String instruction) {
+        return new ParserException("Instruction <" + instruction + "> is not correct");
     }
 
-    public static ParserException arg(){
-        return new ParserException("Arg is not correct");
+    public static ParserException option(String option){
+        return new ParserException("Option <" + option + "> is not correct");
+    }
+    public static ParserException state(String state){
+        return new ParserException("State <" + state + "> is not correct");
     }
 
 }
