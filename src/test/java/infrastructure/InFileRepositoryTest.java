@@ -7,7 +7,6 @@ import domain.models.TaskState;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,7 +51,7 @@ class InFileRepositoryTest {
     }
 
     @Test
-    void date() throws IOException {
+    void date() {
         String date = LocalDateTime.now().toString();
         System.out.println(date);
         assertEquals(1,1);
@@ -75,7 +74,10 @@ class InFileRepositoryTest {
         Task task = createTask();
         repository.add(task);
         Task taskGet = repository.getTaskById(task.getId().getId());
-        assertEquals(task, taskGet);
+        assertEquals(task.getDueDate(), taskGet.getDueDate());
+        assertEquals(task.getDescription(), taskGet.getDescription());
+        assertEquals(task.getId().getId(), taskGet.getId().getId());
+        assertEquals(task.getCreationDate(), taskGet.getCreationDate());
 
         Task task2 = createTaskWithContent();
         assertThrows(IllegalArgumentException.class, () -> repository.getTaskById(task2.getId().getId()));
