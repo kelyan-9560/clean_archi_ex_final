@@ -26,3 +26,5 @@ hs_err_pid*
 .idea/modules.xml
 target/classes/classpath.index
 target/test-classes/classpath.index
+target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
