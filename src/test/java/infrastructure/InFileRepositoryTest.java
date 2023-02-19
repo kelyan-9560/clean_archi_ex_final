@@ -75,7 +75,7 @@ class InFileRepositoryTest {
 
     Task createTask() {
         TaskId id = repository.nextId();
-        return Task.of(id, "description", LocalDateTime.now(), LocalDateTime.now(), TaskState.TODO, null);
+        return Task.of(id, "description", LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), TaskState.TODO, null);
     }
     Task createTaskWithContent() {
         TaskId id = repository.nextId();

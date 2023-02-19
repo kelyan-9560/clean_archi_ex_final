@@ -1,5 +1,14 @@
 package domain.services;
 
+
+import domain.exception.ParserException;
+import domain.models.Task;
+import domain.models.TaskBuilder;
+import utils.DateUtils;
+
+import java.io.IOException;
+import java.util.List;
+
 /*
 agenda add -c "hello world"
 agenda add -d:2022-03-01 -c "finalize the agenda exercise"
@@ -9,53 +18,26 @@ agenda remove 123
 agenda update 123 -s:done
 */
 
-import domain.exception.ParserException;
-import domain.models.CommandOptions;
-import domain.models.CommandInstructions;
-import domain.models.TaskState;
-
-import java.util.List;
-
+/*
+    update id -c||-d||-s
+    add  -c || -d
+    remove id
+    update id
+    */
 
 public class InputParser {
 
-    final List<String> args;
+    private final ParserValidator parserValidator = new ParserValidator();
+    private final TaskService taskService;
+    private final List<String> args;
 
-    public InputParser(List<String> args) {
+    public InputParser(TaskService taskService, List<String> args) {
+        this.taskService = taskService;
         this.args = args;
     }
 
-    //OK
-    public Boolean commandHeaderIsValid(String input) throws ParserException {
-        if(input.equals("agenda")){
-            return true;
-        }else {
-            throw ParserException.command();
-        }
-    }
-
-    //OK
-    public Boolean instructionIsValid(String input) throws ParserException{
-        try{
-            CommandInstructions.valueOf(input.toUpperCase());
-            return true;
-        }catch (Exception e){
-            throw ParserException.instruction(input);
-        }
-    }
-
-    //OK
-    public Boolean argumentIsValid(Character inputArg) throws ParserException {
-        try{
-            CommandOptions.valueOf(inputArg.toString().toUpperCase());
-            return true;
-        }catch (Exception e){
-            throw ParserException.option(inputArg.toString());
-        }
-    }
-
-    public void instructionValidation(String instruction) throws ParserException {
-        instructionIsValid(instruction);
+    public void instructionValidation(String instruction) throws ParserException, IOException {
+        parserValidator.instructionIsValid(instruction);
 
         System.out.println("---- instructionValidation ----");
         System.out.println("args : " + args);
@@ -64,69 +46,67 @@ public class InputParser {
 
         switch (instruction){
             case "add":
-                addInstructionIsValid(tempArgs);
+                var task = addInstruction(tempArgs);
+                System.out.println(task.toString());
+                taskService.saveTask(task);
                 break;
             case "list":
                 System.out.println("list");
-                //listInstructionIsValid(tempArgs);
+                taskService.all();
                 break;
             case "remove":
                 System.out.println("remove");
-                //removeInstructionIsValid(tempArgs);
+                var taskId = tempArgs.get(0);
+                System.out.println("taskId : " + taskId);
+                //taskService.removeTaskById(taskId);
                 break;
             case "update":
-                updateInstructionIsValid(tempArgs);
+                updateInstruction(tempArgs);
+                //taskService.update(tempArgs.get(0));
+                //TODO : Call TaskService to update task
                 break;
             default:
-                //todo throws
-                //return "error";
+                //TODO : throws
             break;
         }
         System.out.println("---- instructionValidation ----");
     }
 
-    /*
-    update
-        ca doit etre un id apres
-            et apres on  a soit -c / -d / -s
-    add
-        -c || -d
 
-    remove
-
-
-    agenda update id
-    * */
-
-//agenda add -c "hello world"
-//agenda add -d:2022-03-01 -c "finalize the agenda exercise"
-    public void addInstructionIsValid(List<String> args) throws ParserException {
+    public Task addInstruction(List<String> args) throws ParserException {
         System.out.println("---- addInstructionIsValid ----");
 
-        for (int i = 0; i < args.size(); i++) {
+        TaskBuilder taskBuilder = new TaskBuilder();
+
+        for (int i = 0; i < args.size() - 1; i++) {
             String arg = args.get(i);
 
-            if(arg.charAt(0) != '-') return;
+            if(arg.charAt(0) != '-') return null;
 
             var argumentName = arg.charAt(1);
-            argumentIsValid(argumentName);
+            parserValidator.argumentIsValid(argumentName);
 
             if (argumentName == 'c'){
-                String value = args.get(i+1);
+                String contentValue = args.get(i+1);
                 System.out.println("-c value");
-                System.out.println(value);
+                System.out.println(contentValue);
+
+                taskBuilder.setDescription(contentValue);
             }
 
             if (argumentName == 'd'){
-                var value = arg.split(":")[1];
+                var dueDateValue = arg.split(":")[1];
                 System.out.println("-d value");
-                System.out.println(value);
+                System.out.println(dueDateValue);
+
+                taskBuilder.setDueDate(DateUtils.stringToDate(dueDateValue));
             }
         }
         System.out.println("---- addInstructionIsValid ----");
+        return taskBuilder.build();
     }
 
-    public Boolean updateInstructionIsValid(List<String> args) throws ParserException {
+    public void updateInstruction(List<String> args) throws ParserException {
         System.out.println("---- updateInstructionIsValid ----");
         var id = args.get(0);
 
@@ -135,10 +115,10 @@ public class InputParser {
         for (int i = 0; i < argsWithoutId.size(); i++) {
             String arg = argsWithoutId.get(i);
 
-            if(arg.charAt(0) != '-') return false;
+            if(arg.charAt(0) != '-') return;
 
             var argumentName = arg.charAt(1);
-            argumentIsValid(argumentName);
+            parserValidator.argumentIsValid(argumentName);
 
             if (argumentName == 'c'){
                 String value = argsWithoutId.get(i+1);
@@ -154,30 +134,19 @@ public class InputParser {
 
             if(argumentName =='s'){
                 var value = arg.split(":")[1];
-                statusIsValid(value);
+                parserValidator.statusIsValid(value);
                 System.out.println("-s value");
                 System.out.println(value);
             }
         }
         System.out.println("---- updateInstructionIsValid ----");
-        return true;
     }
 
-    public Boolean listInstructionIsValid(List<String> args){
+    public Boolean listInstruction(List<String> args){
         return false;
     }
 
-
-    private void statusIsValid(String state) throws ParserException{
-        try{
-            TaskState.valueOf(state.toUpperCase());
-        }catch (Exception e){
-            throw ParserException.state(state);
-        }
-    }
-
-
-    public Boolean removeInstructionIsValid(String id){
+    public Boolean removeInstruction(String id){
         return true;
     }
 

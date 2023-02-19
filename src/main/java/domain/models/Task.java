@@ -6,31 +6,33 @@ import java.util.List;
 public class Task {
     private final TaskId id;
     private final String description;
+    private final LocalDateTime creationDate;
     private LocalDateTime dueDate;
     private LocalDateTime closeDate;
     private TaskState state;
     private final List<Task> subtasks;
 
 
-    public Task(TaskId id, String description, LocalDateTime dueDate, LocalDateTime closeDate, TaskState state, List<Task> subtasks) {
+    public Task(TaskId id, String description, LocalDateTime creationDate, LocalDateTime dueDate, LocalDateTime closeDate, TaskState state, List<Task> subtasks) {
         this.id = id;
         this.description = description;
+        this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.closeDate = closeDate;
         this.state = state;
         this.subtasks = subtasks;
     }
 
-    public static Task of(TaskId id, String description, LocalDateTime dueDate, LocalDateTime closeDate, TaskState state, List<Task> subtasks) {
-        return new Task(id, description, dueDate, closeDate, state, subtasks);
+    public static Task of(TaskId id, String description, LocalDateTime creationDate, LocalDateTime dueDate, LocalDateTime closeDate, TaskState state, List<Task> subtasks) {
+        return new Task(id, description, creationDate, dueDate, closeDate, state, subtasks);
     }
 
     public static Task WithContent(TaskId id, String description){
-        return new Task(id, description, null, null, TaskState.TODO, null);
+        return new Task(id, description, LocalDateTime.now(), null, null, TaskState.TODO, null);
     }
 
     public static Task WithContentAndDueDate(TaskId id,String description, LocalDateTime dueDate){
-        return new Task(id, description, dueDate, null, TaskState.TODO, null);
+        return new Task(id, description, LocalDateTime.now(), dueDate, null, TaskState.TODO, null);
     }
 
     public void makeTaskDone(){

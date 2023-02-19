@@ -1,13 +1,19 @@
-import domain.models.CommandInstructions;
+import domain.kernel.TaskRepository;
 import domain.services.InputParser;
+import domain.services.TaskService;
+import infrastructure.InFileRepository;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("args.length : " + args.length);
 
-        InputParser inputParser = new InputParser(List.of(args));
+        TaskRepository taskRepository = new InFileRepository();
+        TaskService taskService = new TaskService(taskRepository);
+
+        InputParser inputParser = new InputParser(taskService, List.of(args));
 
         try {
             /*
