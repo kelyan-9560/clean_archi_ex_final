@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import domain.kernel.TaskRepository;
 import domain.models.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.models.TaskId;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class InFileRepository implements TaskRepository {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -57,6 +59,11 @@ public class InFileRepository implements TaskRepository {
         throw new IllegalArgumentException("the task with " + id + "does not exist");
     }
 
+    @Override
+    public TaskId nextId() {
+        return TaskId.fromUUID(UUID.randomUUID());
+    }
+
     public void save() throws IOException {
         String arrayToJson = objectMapper.writeValueAsString(this.db);
         this.saveFile(arrayToJson);
@@ -85,6 +92,10 @@ public class InFileRepository implements TaskRepository {
     }
 
     private void saveFile(String json){
+        File old_File = new File(jsonFilePath);
+        if (old_File.exists()){
+            old_File.delete();
+        }
         try {
             FileWriter myWriter = new FileWriter(jsonFilePath);
             myWriter.write(json);
