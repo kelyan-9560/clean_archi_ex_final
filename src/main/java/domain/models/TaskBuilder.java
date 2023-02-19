@@ -7,6 +7,7 @@ public class TaskBuilder {
 
     private TaskId id;
     private String description;
+    private LocalDateTime creationDate;
     private LocalDateTime dueDate;
     private LocalDateTime closeDate;
     private TaskState state;
@@ -20,6 +21,11 @@ public class TaskBuilder {
 
     public TaskBuilder setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public TaskBuilder setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
         return this;
     }
 
@@ -45,7 +51,7 @@ public class TaskBuilder {
 
 
     public Task build() {
-        return new Task(id, description, dueDate, closeDate, state, subtasks);
+        return new Task(id, description, creationDate, dueDate, closeDate, state, subtasks);
     }
 
 }

@@ -62,6 +62,7 @@ public class InputParser {
                 break;
             case "update":
                 updateInstruction(tempArgs);
+                //taskService.update(tempArgs.get(0));
                 //TODO : Call TaskService to update task
                 break;
             default:
