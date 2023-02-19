@@ -7,11 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class InputParserTest {
 
     @Test
-    void instructionValidation() {
-        assertTrue(true);
-    }
-
-    @Test
     void addInstruction() {
         assertTrue(true);
     }
@@ -21,13 +16,4 @@ class InputParserTest {
         assertTrue(true);
     }
 
-    @Test
-    void listInstruction() {
-        assertTrue(true);
-    }
-
-    @Test
-    void removeInstruction() {
-        assertTrue(true);
-    }
 }
