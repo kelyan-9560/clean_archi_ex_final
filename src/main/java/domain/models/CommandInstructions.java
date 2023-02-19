@@ -1,7 +1,7 @@
 package domain.models;
 
 public enum CommandInstructions {
-    ADD("addaze"),
+    ADD("add"),
     LIST("list"),
     REMOVE("remove"),
     UPDATE("update");

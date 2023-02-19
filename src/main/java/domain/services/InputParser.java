@@ -7,13 +7,13 @@ agenda list
 agenda update 123 -d:2022-04-01
 agenda remove 123
 agenda update 123 -s:done
- */
+*/
 
 import domain.exception.ParserException;
-import domain.models.CommandArguments;
+import domain.models.CommandOptions;
 import domain.models.CommandInstructions;
+import domain.models.TaskState;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -25,7 +25,8 @@ public class InputParser {
         this.args = args;
     }
 
-    public Boolean commandIsValid(String input) throws ParserException {
+    //OK
+    public Boolean commandHeaderIsValid(String input) throws ParserException {
         if(input.equals("agenda")){
             return true;
         }else {
@@ -33,48 +34,55 @@ public class InputParser {
         }
     }
 
-    private Boolean instructionIsValid(String input){
+    //OK
+    public Boolean instructionIsValid(String input) throws ParserException{
         try{
             CommandInstructions.valueOf(input.toUpperCase());
             return true;
         }catch (Exception e){
-            ParserException.instructions();
-            return false;
+            throw ParserException.instruction(input);
         }
     }
 
-    private Boolean argsIsValid(String input){
+    //OK
+    public Boolean argumentIsValid(Character inputArg) throws ParserException {
         try{
-            CommandInstructions.valueOf(input.toUpperCase());
+            CommandOptions.valueOf(inputArg.toString().toUpperCase());
             return true;
         }catch (Exception e){
-            ParserException.arg();
-            return false;
+            throw ParserException.option(inputArg.toString());
         }
     }
 
-    public void instructionValidation(String instruction){
-        args.remove(0);
-        args.remove(1);
+    public void instructionValidation(String instruction) throws ParserException {
+        instructionIsValid(instruction);
+
+        System.out.println("---- instructionValidation ----");
+        System.out.println("args : " + args);
+        var tempArgs = args.subList(2, args.size());
+        System.out.println("tempsArgs : " + tempArgs);
 
         switch (instruction){
             case "add":
-                addInstructionIsValid(args);
+                addInstructionIsValid(tempArgs);
                 break;
             case "list":
-                listInstructionIsValid(args);
+                System.out.println("list");
+                //listInstructionIsValid(tempArgs);
+                break;
             case "remove":
-                removeInstructionIsValid(args);
-            break;
+                System.out.println("remove");
+                //removeInstructionIsValid(tempArgs);
+                break;
             case "update":
-                updateInstructionIsValid(args);
-            break;
+                updateInstructionIsValid(tempArgs);
+                break;
             default:
                 //todo throws
                 //return "error";
             break;
         }
-
+        System.out.println("---- instructionValidation ----");
     }
 
     /*
@@ -92,16 +100,66 @@ public class InputParser {
 
 //agenda add -c "hello world"
 //agenda add -d:2022-03-01 -c "finalize the agenda exercise"
+    public void addInstructionIsValid(List<String> args) throws ParserException {
+        System.out.println("---- addInstructionIsValid ----");
 
-    public Boolean addInstructionIsValid(List<String> args){
-        if (isOdd(args.size())) return false;
+        for (int i = 0; i < args.size(); i++) {
+            String arg = args.get(i);
 
-        String arg = args.get(0);
-        if(arg.charAt(0) != '-') return false;
-        if(arg.charAt(1) !='c') return false;
+            if(arg.charAt(0) != '-') return;
 
+            var argumentName = arg.charAt(1);
+            argumentIsValid(argumentName);
 
+            if (argumentName == 'c'){
+                String value = args.get(i+1);
+                System.out.println("-c value");
+                System.out.println(value);
+            }
 
+            if (argumentName == 'd'){
+                var value = arg.split(":")[1];
+                System.out.println("-d value");
+                System.out.println(value);
+            }
+        }
+        System.out.println("---- addInstructionIsValid ----");
+    }
+
+    public Boolean updateInstructionIsValid(List<String> args) throws ParserException {
+        System.out.println("---- updateInstructionIsValid ----");
+        var id = args.get(0);
+
+        var argsWithoutId = args.subList(1, args.size());
+
+        for (int i = 0; i < argsWithoutId.size(); i++) {
+            String arg = argsWithoutId.get(i);
+
+            if(arg.charAt(0) != '-') return false;
+
+            var argumentName = arg.charAt(1);
+            argumentIsValid(argumentName);
+
+            if (argumentName == 'c'){
+                String value = argsWithoutId.get(i+1);
+                System.out.println("-c value");
+                System.out.println(value);
+            }
+
+            if (argumentName == 'd'){
+                var value = arg.split(":")[1];
+                System.out.println("-d value");
+                System.out.println(value);
+            }
+
+            if(argumentName =='s'){
+                var value = arg.split(":")[1];
+                statusIsValid(value);
+                System.out.println("-s value");
+                System.out.println(value);
+            }
+        }
+        System.out.println("---- updateInstructionIsValid ----");
         return true;
     }
 
@@ -109,22 +167,18 @@ public class InputParser {
         return false;
     }
 
-    public Boolean updateInstructionIsValid(List<String> args){
-        if (isOdd(args.size())) return false;
 
-        for (String arg : args) {
-            CommandArguments commandArguments = CommandArguments.valueOf(arg.toUpperCase());
-
-            if (arg.equals("-c") || arg.equals("-d")){
-                return true;
-            }
+    private void statusIsValid(String state) throws ParserException{
+        try{
+            TaskState.valueOf(state.toUpperCase());
+        }catch (Exception e){
+            throw ParserException.state(state);
         }
-        return false;
     }
 
-    public Boolean removeInstructionIsValid(List<String> args){
-        //TODO
-        return false;
+
+    public Boolean removeInstructionIsValid(String id){
+        return true;
     }
 
     private boolean isOdd(int number){

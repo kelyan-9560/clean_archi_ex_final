@@ -92,6 +92,10 @@ class InFileRepository implements TaskRepository {
     }
 
     private void saveFile(String json){
+        File old_File = new File(jsonFilePath);
+        if (old_File.exists()){
+            old_File.delete();
+        }
         try {
             FileWriter myWriter = new FileWriter(jsonFilePath);
             myWriter.write(json);
