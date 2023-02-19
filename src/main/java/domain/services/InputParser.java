@@ -29,6 +29,7 @@ public class InputParser {
         switch (instruction){
             case "add":
                 var task = addInstruction(tempArgs);
+                System.out.println("task : " + task.toString());
                 taskService.saveTask(task);
                 break;
             case "list":
@@ -83,7 +84,7 @@ public class InputParser {
         for (int i = 0; i < argsWithoutId.size(); i++) {
             String arg = argsWithoutId.get(i);
 
-            if(arg.charAt(0) != '-') return null;
+            if(arg.charAt(0) != '-') throw ParserException.optionFormat();
 
             var argumentName = arg.charAt(1);
             parserValidator.argumentIsValid(argumentName);

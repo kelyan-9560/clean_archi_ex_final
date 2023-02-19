@@ -22,4 +22,8 @@ public class ParserException extends Exception{
         return new ParserException("State <" + state + "> is not correct");
     }
 
+    public static ParserException optionFormat(){
+        return new ParserException("Option format is not correct");
+    }
+
 }

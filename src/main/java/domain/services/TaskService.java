@@ -3,7 +3,6 @@ package domain.services;
 import domain.kernel.TaskRepository;
 import domain.models.Task;
 import domain.models.TaskId;
-import domain.models.TaskState;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
