@@ -39,6 +39,10 @@ public class Task {
 
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void updateDueDateTask(LocalDateTime newDueDate){
         this.dueDate = newDueDate;
     }
